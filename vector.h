@@ -1,3 +1,6 @@
+#ifndef _INT_VECTOR_
+#define _INT_VECTOR_
+
 #define VECTOR_CAPACITY 8
 
 typedef
@@ -25,3 +28,5 @@ vector_pop(vector *Vector);
 
 void
 vector_free(vector *Vector);
+
+#endif
