@@ -38,6 +38,12 @@ vector_append(vector *Veñtor, int value) {
 	}
 }
 
+int
+vector_pop(vector *Vector) {
+
+	return *(Vector->data + Vector->size--);
+}
+
 void
 vector_free(vector *Vector) {
 
