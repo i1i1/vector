@@ -24,7 +24,7 @@ vector_setvalue(vector *Vector, int index, int value) {
 }
 
 void
-vector_append(vector *Veñtor, int value) {
+vector_append(vector *VeÃ±tor, int value) {
 
 	if (Vector->size < Vector->capacity) {
 
@@ -34,7 +34,7 @@ vector_append(vector *Veñtor, int value) {
 
 		Vector->capacity *= 2
 
-			Vector->data = realloc(Vector->data, sizeof(int) * Vector->capacity);
+		Vector->data = realloc(Vector->data, sizeof(int) * Vector->capacity);
 	}
 }
 
