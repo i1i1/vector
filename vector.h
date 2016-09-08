@@ -20,5 +20,8 @@ vector_setvalue(vector *Vector, int index, int value);
 void
 vector_append(vector *Vector, int value);
 
+int
+vector_pop(vector *Vector);
+
 void
 vector_free(vector *Vector);
