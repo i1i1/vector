@@ -14,9 +14,12 @@ main()
 
 	for (i = 0; i < 100; i++) {
 		sum += vector_getvalue(&a, i);
-		printf("%d:%d ", vector_getvalue(&a, i));
+		printf("%d:%d ", i, vector_getvalue(&a, i));
 	}
 
 	printf("\n%d \n", sum);
+	vector_qsort(&a);
+	for (i = 0; i < 100; i++)
+	    printf("%d:%d\t", i, vector_getvalue(&a, i));
 	return 0;
 }
