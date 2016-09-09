@@ -14,6 +14,9 @@ struct
 void
 vector_init(vector *Vector);
 
+int 
+vector_len(vector *Vector);
+
 int
 vector_getvalue(vector *Vector, int index);
 
