@@ -58,7 +58,7 @@ vector_pop(vector *Vector) {
 void
 vector_free(vector *Vector) {
 	
-	assert(Vector->data != NULL)
-	assert(Vector != NULL)
+	assert(Vector->data != NULL);
+	assert(Vector != NULL);
 	free(Vector->data);
 }
