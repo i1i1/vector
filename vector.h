@@ -20,7 +20,7 @@ vector_len(vector *Vector);
 int
 vector_getvalue(vector *Vector, int index);
 
-void
+int
 vector_setvalue(vector *Vector, int index, int value);
 
 void
