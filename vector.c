@@ -22,7 +22,7 @@ int
 vector_getvalue(vector *Vector, int index) {
 
 	assert(*Vector != NULL);
-	assert(0 >= index && index < Vector->size);
+	assert(0 =< index && index < Vector->size);
 
 	return Vector->data[index];
 }
