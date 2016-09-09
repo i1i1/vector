@@ -21,6 +21,7 @@ vector_len(vector *Vector) {
 int
 vector_getvalue(vector *Vector, int index) {
 
+	assert(*Vector != NULL);
 	assert(0 <= index < Vector->size);
 
 	return Vector->data[index];
@@ -29,6 +30,7 @@ vector_getvalue(vector *Vector, int index) {
 int
 vector_setvalue(vector *Vector, int index, int value) {
 
+	assert(*Vector != NULL);
 	assert(0 <= index < Vector->size);
 
 	Vector->data[index] = value;
@@ -39,6 +41,7 @@ vector_setvalue(vector *Vector, int index, int value) {
 void
 vector_append(vector *Vector, int value) {
 
+	assert(*Vector != NULL);
 	if (Vector->size >= Vector->capacity) {
 
 		Vector->capacity *= 2;
@@ -57,20 +60,22 @@ vector_pop(vector *Vector) {
 
 int
 compare(int a, int b) {
-    if (a > b) 
-        return a;
-    return b;
+	if (a > b) 
+    		return a;
+        return b;
 }
 
 void
 vector_qsort(vector *Vector) {
-    qsort(Vector->data, Vector->size, sizeof(int), &compare);
+	assert(*Vector != NULL);
+	qsort(Vector->data, Vector->size, sizeof(int), &compare);
 }
 
 void
 vector_free(vector *Vector) {
-	
+
+	assert(*Vector != NULL);
 	assert(Vector->data != NULL);
-	assert(Vector != NULL);
+
 	free(Vector->data);
 }
