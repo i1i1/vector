@@ -7,7 +7,7 @@ typedef
 struct
 {
 	unsigned int size;
-	unsigned int capacty;
+	unsigned int capacity;
 	int *data;
 } vector;
 
