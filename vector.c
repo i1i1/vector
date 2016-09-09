@@ -13,9 +13,15 @@ vector_init(vector *Vector) {
 }
 
 int
+vector_len(vector *Vector) { 
+
+	return Vector->size; 
+}
+
+int
 vector_getvalue(vector *Vector, int index) {
 
-	assert(index < Vector->size);
+	assert(0 <= index < Vector->size);
 
 	return Vector->data[index];
 }
@@ -23,7 +29,7 @@ vector_getvalue(vector *Vector, int index) {
 int
 vector_setvalue(vector *Vector, int index, int value) {
 
-	assert(index < Vector->size);
+	assert(0 <= index < Vector->size);
 
 	Vector->data[index] = value;
 
