@@ -63,13 +63,6 @@ vector_pop(vector *Vector) {
 	return Vector->data[Vector->size--];
 }
 
-int
-compare(int a, int b) {
-	if (a > b) 
-    		return a;
-        return b;
-}
-
 void
 vector_free(vector *Vector) {
 
