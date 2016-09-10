@@ -17,11 +17,14 @@ vector_init(vector *Vector);
 int 
 vector_len(vector *Vector);
 
-int
-vector_getvalue(vector *Vector, int index);
+*int
+vector_getarr(vector *Vector);
 
 int
-vector_setvalue(vector *Vector, int index, int value);
+vector_get(vector *Vector, int index);
+
+int
+vector_set(vector *Vector, int index, int value);
 
 void
 vector_append(vector *Vector, int value);
@@ -31,9 +34,6 @@ vector_pop(vector *Vector);
 
 int
 compare(int a, int b);
-
-void
-vector_qsort(vector *Vector);
 
 void
 vector_free(vector *Vector);
