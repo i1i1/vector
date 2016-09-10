@@ -18,8 +18,13 @@ vector_len(vector *Vector) {
 	return Vector->size; 
 }
 
+*int
+vector_getarr(vector *Vector) {
+	return Vector->data[0];
+}
+
 int
-vector_getvalue(vector *Vector, int index) {
+vector_get(vector *Vector, int index) {
 
 	assert(*Vector != NULL);
 	assert(0 =< index && index < Vector->size);
@@ -28,7 +33,7 @@ vector_getvalue(vector *Vector, int index) {
 }
 
 int
-vector_setvalue(vector *Vector, int index, int value) {
+vector_set(vector *Vector, int index, int value) {
 
 	assert(*Vector != NULL);
 	assert(0 <= index < Vector->size);
@@ -63,12 +68,6 @@ compare(int a, int b) {
 	if (a > b) 
     		return a;
         return b;
-}
-
-void
-vector_qsort(vector *Vector) {
-	assert(*Vector != NULL);
-	qsort(Vector->data, Vector->size, sizeof(int), &compare);
 }
 
 void
