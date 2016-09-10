@@ -3,6 +3,13 @@
 #include "vector.h"
 
 int
+compare(int a, int b) {
+	if (a > b)
+		return a;
+	return b;
+}
+
+int
 main()
 {
 	vector a;
@@ -13,13 +20,14 @@ main()
 		vector_append(&a, 99 - i);
 
 	for (i = 0; i < 100; i++) {
-		sum += vector_getvalue(&a, i);
-		printf("%d:%d\t", i, vector_getvalue(&a, i));
+		sum += vector_get(&a, i);
+		printf("%d:%d\t", i, vector_get(&a, i));
 	}
 
 	printf("\n%d \n", sum);
-	vector_qsort(&a);
+	int *b = vector_getarr(&a);
+	qsort(b, vector_len(&a), sizeof(int), &compare);
 	for (i = 0; i < 100; i++)
-	    printf("%d:%d\t", i, vector_getvalue(&a, i));
+	    printf("%d:%d\t", i, vector_get(&a, i));
 	return 0;
 }
