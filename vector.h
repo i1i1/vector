@@ -32,9 +32,6 @@ vector_append(vector *Vector, int value);
 int
 vector_pop(vector *Vector);
 
-int
-compare(int a, int b);
-
 void
 vector_free(vector *Vector);
 
