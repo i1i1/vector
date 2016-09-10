@@ -17,8 +17,8 @@ vector_init(vector *Vector);
 int 
 vector_len(vector *Vector);
 
-*int
-vector_getarr(vector *Vector);
+int
+*vector_getarr(vector *Vector);
 
 int
 vector_get(vector *Vector, int index);
