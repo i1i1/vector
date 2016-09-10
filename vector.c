@@ -18,16 +18,16 @@ vector_len(vector *Vector) {
 	return Vector->size; 
 }
 
-*int
-vector_getarr(vector *Vector) {
-	return Vector->data[0];
+int
+*vector_getarr(vector *Vector) {
+	return Vector->data;
 }
 
 int
 vector_get(vector *Vector, int index) {
 
-	assert(*Vector != NULL);
-	assert(0 =< index && index < Vector->size);
+	assert(-1 < index);
+	assert(index < Vector->size);
 
 	return Vector->data[index];
 }
@@ -35,7 +35,6 @@ vector_get(vector *Vector, int index) {
 int
 vector_set(vector *Vector, int index, int value) {
 
-	assert(*Vector != NULL);
 	assert(0 <= index < Vector->size);
 
 	Vector->data[index] = value;
@@ -46,7 +45,6 @@ vector_set(vector *Vector, int index, int value) {
 void
 vector_append(vector *Vector, int value) {
 
-	assert(*Vector != NULL);
 	if (Vector->size >= Vector->capacity) {
 
 		Vector->capacity *= 2;
@@ -66,7 +64,6 @@ vector_pop(vector *Vector) {
 void
 vector_free(vector *Vector) {
 
-	assert(*Vector != NULL);
 	assert(Vector->data != NULL);
 
 	free(Vector->data);
