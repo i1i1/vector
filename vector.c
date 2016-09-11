@@ -12,6 +12,15 @@ vector_init(vector *Vector) {
 	Vector->data = malloc(sizeof(int) * VECTOR_CAPACITY);
 }
 
+void
+vector_initarr(vector *Vector, int *arr, int size) {
+
+    Vector->size = size;
+    Vector->capacity = size - 1;
+
+    Vector->data = arr;
+}
+
 int
 vector_len(vector *Vector) { 
 
