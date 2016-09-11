@@ -14,6 +14,9 @@ struct
 void
 vector_init(vector *Vector);
 
+void
+vector_initarr(vector *Vector, int *arr, int len);
+
 int 
 vector_len(vector *Vector);
 
