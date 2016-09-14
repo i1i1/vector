@@ -12,11 +12,11 @@ struct
 	int *data;
 } vector;
 
-void
+int
 vector_init(vector *Vector);
 
 void
-vector_init(vector *Vector, int *arr, int len);
+vector_initarr(vector *Vector, int *arr, int len);
 
 int 
 vector_len(vector *Vector);
@@ -30,7 +30,7 @@ vector_get(vector *Vector, int index);
 int
 vector_set(vector *Vector, int index, int value);
 
-void
+int
 vector_append(vector *Vector, int value);
 
 int
