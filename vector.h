@@ -2,6 +2,7 @@
 #define _INT_VECTOR_
 
 #define VECTOR_CAPACITY 8
+#define VECTOR_CAPACITY_GROWTH 2
 
 typedef
 struct
@@ -15,7 +16,7 @@ void
 vector_init(vector *Vector);
 
 void
-vector_initarr(vector *Vector, int *arr, int len);
+vector_init(vector *Vector, int *arr, int len);
 
 int 
 vector_len(vector *Vector);
