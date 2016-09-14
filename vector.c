@@ -3,17 +3,22 @@
 #include <assert.h>
 #include "vector.h"
 
-void
+int
 vector_init(vector *Vector) {
 
 	Vector->size = 0;
 	Vector->capacity = VECTOR_CAPACITY;
 	
-	Vector->data = malloc(sizeof(int) * VECTOR_CAPACITY);
+	int tmp = malloc(sizeof(int) * VECTOR_CAPACITY);
+
+	if (!tmp)
+		return 1;
+
+	return Vector->data = tmp;
 }
 
 void
-vector_init(vector *Vector, int *arr, int size) {
+vector_initarr(vector *Vector, int *arr, int size) {
 
         assert(arr != NULL);
 
@@ -26,7 +31,7 @@ vector_init(vector *Vector, int *arr, int size) {
 int
 vector_len(vector *Vector) { 
 
-        assert(*Vector != NULL);
+    assert(Vector != NULL);
 
 	return Vector->size;
 }
@@ -34,14 +39,14 @@ vector_len(vector *Vector) {
 int
 *vector_getarr(vector *Vector) {
 
-	assert(*Vector != NULL);
+	assert(Vector != NULL);
 	return Vector->data;
 }
 
 int
 vector_get(vector *Vector, int index) {
 
-	assert(*Vector != NULL);
+	assert(Vector != NULL);
 	assert(-1 < index);
 	assert(index < Vector->size);
 
@@ -51,32 +56,37 @@ vector_get(vector *Vector, int index) {
 int
 vector_set(vector *Vector, int index, int value) {
 
-	assert(*Vector != NULL);
+	assert(Vector != NULL);
 	assert(0 <= index);
 	assert(index < Vector->size);
 
 	Vector->data[index] = value;
-
-	return 0;
 }
 
-void
+int
 vector_append(vector *Vector, int value) {
 
-	assert(*Vector != NULL);
+	assert(Vector != NULL);
+
+	int tmp;
 
 	if (Vector->size >= Vector->capacity) {
 		Vector->capacity *= VECTOR_CAPACITY_GROWTH;
+		tmp = realloc(Vector->data, sizeof(int) * Vector->capacity);
+		if (!tmp)
+			return 1;
 		Vector->data = realloc(Vector->data, sizeof(int) * Vector->capacity);
 	}
 
 	Vector->data[Vector->size++] = value;
+
+	return 0;
 }
 
 int
 vector_pop(vector *Vector) {
 
-	assert(*Vector != NULL);
+	assert(Vector != NULL);
 	assert(Vector->size != 0);
 
 	return Vector->data[Vector->size--];
@@ -85,7 +95,7 @@ vector_pop(vector *Vector) {
 void
 vector_free(vector *Vector) {
 
-	assert(*Vector != NULL);
+	assert(Vector != NULL);
 	assert(Vector->data != NULL);
 
 	free(Vector->data);
