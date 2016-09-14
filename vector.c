@@ -8,33 +8,40 @@ vector_init(vector *Vector) {
 
 	Vector->size = 0;
 	Vector->capacity = VECTOR_CAPACITY;
-
+	
 	Vector->data = malloc(sizeof(int) * VECTOR_CAPACITY);
 }
 
 void
-vector_initarr(vector *Vector, int *arr, int size) {
+vector_init(vector *Vector, int *arr, int size) {
 
-    Vector->size = size;
-    Vector->capacity = size - 1;
+        assert(arr != NULL);
 
-    Vector->data = arr;
+        Vector->size = size;
+        Vector->capacity = size - 1;
+
+        Vector->data = arr;
 }
 
 int
 vector_len(vector *Vector) { 
 
-	return Vector->size; 
+        assert(*Vector != NULL);
+
+	return Vector->size;
 }
 
 int
 *vector_getarr(vector *Vector) {
+
+	assert(*Vector != NULL);
 	return Vector->data;
 }
 
 int
 vector_get(vector *Vector, int index) {
 
+	assert(*Vector != NULL);
 	assert(-1 < index);
 	assert(index < Vector->size);
 
@@ -44,7 +51,9 @@ vector_get(vector *Vector, int index) {
 int
 vector_set(vector *Vector, int index, int value) {
 
-	assert(0 <= index < Vector->size);
+	assert(*Vector != NULL);
+	assert(0 <= index);
+	assert(index < Vector->size);
 
 	Vector->data[index] = value;
 
@@ -54,25 +63,29 @@ vector_set(vector *Vector, int index, int value) {
 void
 vector_append(vector *Vector, int value) {
 
+	assert(*Vector != NULL);
+
 	if (Vector->size >= Vector->capacity) {
-
-		Vector->capacity *= 2;
-
+		Vector->capacity *= VECTOR_CAPACITY_GROWTH;
 		Vector->data = realloc(Vector->data, sizeof(int) * Vector->capacity);
 	}
-	
+
 	Vector->data[Vector->size++] = value;
 }
 
 int
 vector_pop(vector *Vector) {
-	assert(Vector->size == 0);
+
+	assert(*Vector != NULL);
+	assert(Vector->size != 0);
+
 	return Vector->data[Vector->size--];
 }
 
 void
 vector_free(vector *Vector) {
 
+	assert(*Vector != NULL);
 	assert(Vector->data != NULL);
 
 	free(Vector->data);
