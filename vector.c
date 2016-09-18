@@ -8,7 +8,8 @@ vector_init(vector *Vector) {
 
 	Vector->size = 0;
 	Vector->capacity = VECTOR_CAPACITY;
-	
+	Vector->flag = 0;
+
 	int tmp = malloc(sizeof(int) * VECTOR_CAPACITY);
 
 	if (!tmp)
@@ -24,6 +25,7 @@ vector_initarr(vector *Vector, int *arr, int size) {
 
         Vector->size = size;
         Vector->capacity = size - 1;
+        Vector->flag = 1;
 
         Vector->data = arr;
 }
@@ -64,23 +66,32 @@ vector_set(vector *Vector, int index, int value) {
 }
 
 int
-vector_append(vector *Vector, int value) {
+vector_push(vector *Vector, int value) {
 
 	assert(Vector != NULL);
 
 	int tmp;
 
 	if (Vector->size >= Vector->capacity) {
+
+		if (Vector->flag)
+			return 1;
+
 		Vector->capacity *= VECTOR_CAPACITY_GROWTH;
 		tmp = realloc(Vector->data, sizeof(int) * Vector->capacity);
+
 		if (!tmp)
 			return 1;
-		Vector->data = realloc(Vector->data, sizeof(int) * Vector->capacity);
+
+		Vector->data = tmp;
+
 	}
 
 	Vector->data[Vector->size++] = value;
 
 	return 0;
+
+
 }
 
 int
@@ -100,3 +111,4 @@ vector_free(vector *Vector) {
 
 	free(Vector->data);
 }
+
