@@ -10,6 +10,7 @@ struct
 	unsigned int size;
 	unsigned int capacity;
 	int *data;
+	int flag;       /* flag == TRUE, if data was given*/
 } vector;
 
 int
@@ -31,7 +32,7 @@ int
 vector_set(vector *Vector, int index, int value);
 
 int
-vector_append(vector *Vector, int value);
+vector_push(vector *Vector, int value);
 
 int
 vector_pop(vector *Vector);
