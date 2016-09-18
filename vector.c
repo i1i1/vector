@@ -38,8 +38,8 @@ vector_len(vector *Vector) {
 	return Vector->size;
 }
 
-int
-*vector_getarr(vector *Vector) {
+int*
+vector_getarr(vector *Vector) {
 
 	assert(Vector != NULL);
 	return Vector->data;
