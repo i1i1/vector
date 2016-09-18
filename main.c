@@ -17,7 +17,7 @@ main()
 
 	vector_init(&a);
 	for (i = 0; i < 100; i++)
-		vector_append(&a, 99 - i);
+		vector_push(&a, 99 - i);
 
 	for (i = 0; i < 100; i++) {
 		sum += vector_get(&a, i);
