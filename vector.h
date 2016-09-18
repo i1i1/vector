@@ -22,8 +22,8 @@ vector_initarr(vector *Vector, int *arr, int len);
 int 
 vector_len(vector *Vector);
 
-int
-*vector_getarr(vector *Vector);
+int*
+vector_getarr(vector *Vector);
 
 int
 vector_get(vector *Vector, int index);
