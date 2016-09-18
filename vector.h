@@ -10,7 +10,7 @@ struct
 	unsigned int size;
 	unsigned int capacity;
 	int *data;
-	int flag;       /* flag == TRUE, if data was given*/
+	int flag;       /* flag == TRUE, if data wasn't allocated */
 } vector;
 
 int
