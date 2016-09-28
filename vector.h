@@ -4,37 +4,43 @@
 #define VECTOR_CAPACITY 8
 #define VECTOR_CAPACITY_GROWTH 2
 
+/*
+    VECTOR_CAPACITY is conctant of a begining vector size
+    VECTOR_CAPACITY_GROWTH is a conctant of vector's growth rate
+*/
+
 typedef
 struct
 {
-	unsigned int size;
-	unsigned int capacity;
-	int *data;
-	int flag;       /* flag == TRUE, if data wasn't allocated */
+	unsigned int length;        /* the number of used vector units */
+	unsigned int capacity;      /* the size of vector in vector units */
+	unsigned int size;          /* vector unit size */
+	unsigned char *data;        /* vector addres */
+	int flag;                   /* flag == TRUE, if data wasn't allocated */
 } vector;
 
 int
-vector_init(vector *Vector);
+vector_init(vector *Vector, int size);
 
 void
-vector_initarr(vector *Vector, int *arr, int len);
+vector_initarr(vector *Vector, unsigned char *arr, int length, int size);
 
-int 
+int
 vector_len(vector *Vector);
 
-int*
+void*
 vector_getarr(vector *Vector);
 
-int
+void*
 vector_get(vector *Vector, int index);
 
-int
-vector_set(vector *Vector, int index, int value);
+void
+vector_set(vector *Vector, int index, void *value);
 
 int
-vector_push(vector *Vector, int value);
+vector_push(vector *Vector, void *value);
 
-int
+void*
 vector_pop(vector *Vector);
 
 void
