@@ -1,31 +1,36 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <string.h>
 #include "vector.h"
 
 int
-vector_init(vector *Vector) {
+vector_init(vector *Vector, int size) {
 
-	Vector->size = 0;
+	Vector->size = size;
+	Vector->length = 0;
 	Vector->capacity = VECTOR_CAPACITY;
 	Vector->flag = 0;
 
-	int tmp = malloc(sizeof(int) * VECTOR_CAPACITY);
+	unsigned char *tmp = malloc(Vector->size * Vector->capacity);
 
-	if (!tmp)
+	if (!tmp)               /* malloc returned no memory signal */
 		return 1;
 
-	return Vector->data = tmp;
+	Vector->data = tmp;
+
+	return 0;
 }
 
 void
-vector_initarr(vector *Vector, int *arr, int size) {
+vector_initarr(vector *Vector, unsigned char *arr, int length, int size) {
 
         assert(arr != NULL);
 
-        Vector->size = size;
-        Vector->capacity = size - 1;
+        Vector->length = length;
+        Vector->capacity = length - 1;
         Vector->flag = 1;
+        Vector->size = size;
 
         Vector->data = arr;
 }
@@ -33,52 +38,53 @@ vector_initarr(vector *Vector, int *arr, int size) {
 int
 vector_len(vector *Vector) { 
 
-    assert(Vector != NULL);
+	assert(Vector != NULL);
 
-	return Vector->size;
+	return Vector->length;
 }
 
-int*
+void*
 vector_getarr(vector *Vector) {
 
 	assert(Vector != NULL);
+
 	return Vector->data;
 }
 
-int
+void*
 vector_get(vector *Vector, int index) {
 
 	assert(Vector != NULL);
 	assert(-1 < index);
-	assert(index < Vector->size);
+	assert(index < Vector->length);
 
-	return Vector->data[index];
+	return Vector->data + index * Vector->size;
 }
 
-int
-vector_set(vector *Vector, int index, int value) {
+void
+vector_set(vector *Vector, int index, void *value) {
 
 	assert(Vector != NULL);
 	assert(0 <= index);
-	assert(index < Vector->size);
+	assert(index < Vector->length);
 
-	Vector->data[index] = value;
+	memcpy(Vector->data + index * Vector->size, value, Vector->size);
 }
 
 int
-vector_push(vector *Vector, int value) {
+vector_push(vector *Vector, void *value) {
 
 	assert(Vector != NULL);
 
-	int tmp;
-
-	if (Vector->size >= Vector->capacity) {
+	if (Vector->length == Vector->capacity) {
 
 		if (Vector->flag)
 			return 1;
 
+		unsigned char *tmp;
+
 		Vector->capacity *= VECTOR_CAPACITY_GROWTH;
-		tmp = realloc(Vector->data, sizeof(int) * Vector->capacity);
+		tmp = realloc(Vector->data, Vector->size * Vector->capacity);
 
 		if (!tmp)
 			return 1;
@@ -87,20 +93,18 @@ vector_push(vector *Vector, int value) {
 
 	}
 
-	Vector->data[Vector->size++] = value;
+	vector_set(Vector, Vector->length++, value);
 
 	return 0;
-
-
 }
 
-int
+void*
 vector_pop(vector *Vector) {
 
 	assert(Vector != NULL);
-	assert(Vector->size != 0);
+	assert(Vector->length != 0);
 
-	return Vector->data[Vector->size--];
+	return Vector->data + Vector->length-- * Vector->size;
 }
 
 void
@@ -111,4 +115,3 @@ vector_free(vector *Vector) {
 
 	free(Vector->data);
 }
-
