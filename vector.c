@@ -79,7 +79,7 @@ vector_push(vector *Vector, void *value) {
 	if (Vector->length == Vector->capacity) {
 
 		if (Vector->flag)
-			return 1;
+			return 1;		/* can't reallocate given array */
 
 		unsigned char *tmp;
 
@@ -87,7 +87,7 @@ vector_push(vector *Vector, void *value) {
 		tmp = realloc(Vector->data, Vector->size * Vector->capacity);
 
 		if (!tmp)
-			return 1;
+			return 1;		/* realloc returned no memory signal */
 
 		Vector->data = tmp;
 
