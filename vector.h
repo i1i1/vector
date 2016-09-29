@@ -1,5 +1,5 @@
-#ifndef _INT_VECTOR_
-#define _INT_VECTOR_
+#ifndef _VECTOR_
+#define _VECTOR_
 
 #define VECTOR_CAPACITY 8
 #define VECTOR_CAPACITY_GROWTH 2
