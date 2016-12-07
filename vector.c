@@ -83,14 +83,14 @@ vector_push(vector *Vector, void *value) {
 
 		unsigned char *tmp;
 
-		Vector->capacity *= VECTOR_CAPACITY_GROWTH;
 		tmp = realloc(Vector->data, Vector->size * Vector->capacity);
 
 		if (!tmp)
 			return 1;		/* realloc returned no memory signal */
 
-		Vector->data = tmp;
+		Vector->capacity *= VECTOR_CAPACITY_GROWTH;
 
+		Vector->data = tmp;
 	}
 
 	vector_set(Vector, Vector->length++, value);
