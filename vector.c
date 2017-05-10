@@ -1,117 +1,89 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include <assert.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
+
 #include "vector.h"
 
+
 int
-vector_init(vector *Vector, int size) {
+_vector_init(struct _vector *vec)
+{
+	assert(vec != NULL);
 
-	Vector->size = size;
-	Vector->length = 0;
-	Vector->capacity = VECTOR_CAPACITY;
-	Vector->flag = 0;
+	char *tmp;
 
-	unsigned char *tmp = malloc(Vector->size * Vector->capacity);
+	vec->length = 0;
+	vec->capacity = 0;
 
-	if (!tmp)               /* malloc returned no memory signal */
+	tmp = malloc(vec->size * VECTOR_INIT_CAPACITY);
+
+	if (tmp == NULL)
 		return 1;
 
-	Vector->data = tmp;
+	vec->capacity = VECTOR_INIT_CAPACITY;
+	vec->data = tmp;
 
 	return 0;
 }
 
-void
-vector_initarr(vector *Vector, unsigned char *arr, int length, int size) {
-
-        assert(arr != NULL);
-
-        Vector->length = length;
-        Vector->capacity = length - 1;
-        Vector->flag = 1;
-        Vector->size = size;
-
-        Vector->data = arr;
-}
-
 int
-vector_len(vector *Vector) { 
+_vector_push(struct _vector *vec, void *value)
+{
+	assert(vec != NULL);
+	assert(vec->data != NULL);
+	assert(value != NULL);
 
-	assert(Vector != NULL);
 
-	return Vector->length;
-}
+	if (vec->capacity == vec->length) {
+		char *tmp;
 
-void*
-vector_getarr(vector *Vector) {
+		tmp = realloc(vec->data, vec->size * vec->capacity * VECTOR_CAPACITY_GROWTH);
 
-	assert(Vector != NULL);
+		if (tmp == NULL)
+			return 1;
 
-	return Vector->data;
-}
+		vec->capacity *= VECTOR_CAPACITY_GROWTH;
+		vec->data = tmp;
 
-void*
-vector_get(vector *Vector, int index) {
-
-	assert(Vector != NULL);
-	assert(-1 < index);
-	assert(index < Vector->length);
-
-	return Vector->data + index * Vector->size;
-}
-
-void
-vector_set(vector *Vector, int index, void *value) {
-
-	assert(Vector != NULL);
-	assert(0 <= index);
-	assert(index < Vector->length);
-
-	memcpy(Vector->data + index * Vector->size, value, Vector->size);
-}
-
-int
-vector_push(vector *Vector, void *value) {
-
-	assert(Vector != NULL);
-
-	if (Vector->length == Vector->capacity) {
-
-		if (Vector->flag)
-			return 1;		/* can't reallocate given array */
-
-		unsigned char *tmp;
-
-		tmp = realloc(Vector->data, Vector->size * Vector->capacity);
-
-		if (!tmp)
-			return 1;		/* realloc returned no memory signal */
-
-		Vector->capacity *= VECTOR_CAPACITY_GROWTH;
-
-		Vector->data = tmp;
 	}
 
-	vector_set(Vector, Vector->length++, value);
+	memcpy(vec->data + vec->length * vec->size, value, vec->size);
+	vec->length++;
 
 	return 0;
 }
 
-void*
-vector_pop(vector *Vector) {
+void *
+_vector_pop(struct _vector *vec)
+{
+	assert(vec != NULL);
+	assert(vec->length != 0);
 
-	assert(Vector != NULL);
-	assert(Vector->length != 0);
+	return vec->data + --vec->length * vec->size;
+}
 
-	return Vector->data + Vector->length-- * Vector->size;
+
+void *
+_vector_get(struct _vector *vec, int idx)
+{
+	assert(vec != NULL);
+	assert(vec->data != NULL);
+	assert(0 <= idx);
+	assert(idx < vec->length);
+
+	return vec->data + idx * vec->size;
 }
 
 void
-vector_free(vector *Vector) {
+_vector_set(struct _vector *vec, int idx, void *value)
+{
+	assert(vec != NULL);
+	assert(vec->data != NULL);
+	assert(0 <= idx);
+	assert(idx < vec->length);
+	assert(value != NULL);
 
-	assert(Vector != NULL);
-	assert(Vector->data != NULL);
-
-	free(Vector->data);
+	memcpy(vec->data + idx * vec->size, value, vec->size);
 }
+

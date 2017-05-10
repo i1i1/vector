@@ -1,49 +1,93 @@
-#ifndef _VECTOR_
-#define _VECTOR_
+#ifndef _VECTOR_H_
+#define _VECTOR_H_
 
-#define VECTOR_CAPACITY 8
-#define VECTOR_CAPACITY_GROWTH 2
+#include <assert.h>
 
-/*
-    VECTOR_CAPACITY is conctant of a begining vector size
-    VECTOR_CAPACITY_GROWTH is a conctant of vector's growth rate
-*/
 
-typedef
-struct
-{
-	unsigned int length;        /* the number of used vector units */
-	unsigned int capacity;      /* the size of vector in vector units */
-	unsigned int size;          /* vector unit size */
-	unsigned char *data;        /* vector addres */
-	int flag;                   /* flag == TRUE, if data wasn't allocated */
-} vector;
+#define VECTOR_INIT_CAPACITY	8
+#define VECTOR_CAPACITY_GROWTH	2
 
-int
-vector_init(vector *Vector, int size);
 
-void
-vector_initarr(vector *Vector, unsigned char *arr, int length, int size);
+struct _vector {
+	char *data;
+	int length;
+	int capacity;
+	int size;
 
-int
-vector_len(vector *Vector);
+};
 
-void*
-vector_getarr(vector *Vector);
+#define vector_generate(type)									\
+												\
+	struct _vector_##type;									\
+												\
+	struct _vector_functions_##type {							\
+		int (*push)(struct _vector_##type *, type);					\
+		type (*pop)(struct _vector_##type *);						\
+		type (*get)(struct _vector_##type *, int);					\
+		void (*set)(struct _vector_##type *, int, type);				\
+												\
+	};											\
+												\
+	struct _vector_##type {									\
+		type *data;									\
+		int length;									\
+		int capacity;									\
+		int size;									\
+		struct _vector_functions_##type functions;					\
+												\
+	};											\
+												\
+												\
+	int											\
+	_vector_push_##type(struct _vector_##type *a, type value)				\
+	{											\
+		return _vector_push((struct _vector *)a, &value);				\
+	}											\
+												\
+	type											\
+	_vector_pop_##type(struct _vector_##type *a)						\
+	{											\
+		return *(type *)_vector_pop((struct _vector *)a);				\
+	}											\
+												\
+	type											\
+	_vector_get_##type(struct _vector_##type *a, int idx)					\
+	{											\
+		return *(type *)_vector_get((struct _vector *)a, idx);				\
+	}											\
+												\
+	void											\
+	_vector_set_##type(struct _vector_##type *a, int idx,					\
+							type value)				\
+	{											\
+		_vector_set((struct _vector *)a, idx, &value);					\
+		}
 
-void*
-vector_get(vector *Vector, int index);
 
-void
-vector_set(vector *Vector, int index, void *value);
+#define vector_init(type, name)									\
+												\
+	struct _vector_##type name;								\
+												\
+	name.functions.push = _vector_push_##type;						\
+	name.functions.pop = _vector_pop_##type;						\
+	name.functions.get = _vector_get_##type;						\
+	name.functions.set = _vector_set_##type;						\
+												\
+	name.size = sizeof(type);								\
+												\
+	assert(_vector_init(&name) == 0)							\
 
-int
-vector_push(vector *Vector, void *value);
 
-void*
-vector_pop(vector *Vector);
+#define vector_push(a, value)		(a.functions.push(&a, value))
+#define vector_pop(a)			(a.functions.pop(&a))
+#define vector_get(a, idx)		(a.functions.get(&a, idx))
+#define vector_set(a, idx, value)	(a.functions.set(&a, idx, value))
 
-void
-vector_free(vector *Vector);
+int	_vector_init(struct _vector *vec);
+int 	_vector_push(struct _vector *vec, void *value);
+void 	*_vector_pop(struct _vector *vec);
+void	*_vector_get(struct _vector *vec, int idx);
+void	 _vector_set(struct _vector *vec, int idx, void *value);
 
 #endif
+
