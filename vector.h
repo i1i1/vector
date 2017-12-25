@@ -1,49 +1,37 @@
 #ifndef _VECTOR_
 #define _VECTOR_
 
-#define VECTOR_CAPACITY 8
-#define VECTOR_CAPACITY_GROWTH 2
+#include <stdlib.h>
 
-/*
-    VECTOR_CAPACITY is conctant of a begining vector size
-    VECTOR_CAPACITY_GROWTH is a conctant of vector's growth rate
-*/
+#define VECTOR_START_MAXNMEMB	8
+#define VECTOR_MAXNMEMB_GROWTH	1.4
 
-typedef
-struct
-{
-	unsigned int length;        /* the number of used vector units */
-	unsigned int capacity;      /* the size of vector in vector units */
-	unsigned int size;          /* vector unit size */
-	unsigned char *data;        /* vector addres */
-	int flag;                   /* flag == TRUE, if data wasn't allocated */
+#define VECTOR_MEM_ERR	1
+#define VECTOR_OK	0
+
+
+typedef struct {
+	size_t nmemb;
+	size_t maxnmemb;
+	size_t size;
+	void *data;
+	void *(*realloc)(void *, size_t);
+
 } vector;
 
-int
-vector_init(vector *Vector, int size);
+void vector_initdata(vector *v, void *arr, size_t nmeb, size_t size,
+		void *(*real)(void *, size_t));
+int vector_init(vector *v, size_t size, void *(*real)(void *, size_t));
+void vector_free(vector *v);
 
-void
-vector_initarr(vector *Vector, unsigned char *arr, int length, int size);
+int vector_nmemb(const vector *v);
+void *vector_data(const vector *v);
 
-int
-vector_len(vector *Vector);
+void vector_set(vector *v, size_t idx, const void *val);
+void *vector_get(const vector *v, size_t idx);
 
-void*
-vector_getarr(vector *Vector);
-
-void*
-vector_get(vector *Vector, int index);
-
-void
-vector_set(vector *Vector, int index, void *value);
-
-int
-vector_push(vector *Vector, void *value);
-
-void*
-vector_pop(vector *Vector);
-
-void
-vector_free(vector *Vector);
+int vector_push(vector *v, const void *val);
+void *vector_pop(vector *v);
 
 #endif
+

@@ -5,9 +5,8 @@ OUT=vector
 
 all: build
 
-build: main.o vector.o
+vector: main.o vector.o
 	$(CC) $(CFLAGS) -o $(OUT) main.c vector.c
-	$(RM) *.o
 
 debug: CFLAGS+=-DDEBUG_ON
 debug: build
