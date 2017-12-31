@@ -3,13 +3,13 @@ CFLAGS=
 RM=rm -rf
 OUT=vector
 
-all: build
+all: vector
 
 vector: main.o vector.o
 	$(CC) $(CFLAGS) -o $(OUT) main.c vector.c
 
 debug: CFLAGS+=-DDEBUG_ON
-debug: build
+debug: clean vector
 
 main.o: main.c vector.h
 	$(CC) $(CFLAGS) -c main.c

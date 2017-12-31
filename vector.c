@@ -53,7 +53,7 @@ vector_initdata(vector *v, void *arr, size_t nmemb, size_t size,
 	v->nmemb = nmemb;
 	v->maxnmemb = nmemb;
 	v->size = size;
-	v->realloc = realloc;
+	v->realloc = real;
 }
 
 int
