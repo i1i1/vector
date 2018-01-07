@@ -5,126 +5,162 @@
 #include <stdlib.h>
 
 
-#define VECTOR_INIT_CAPACITY	8
-#define VECTOR_CAPACITY_GROWTH	2
+#define VECTOR_START_MAXNMEMB	8
+#define VECTOR_MAXNMEMB_GROWTH	1.4
 
+#define VECTOR_MEM_ERR	1
+#define VECTOR_OK	0
 
-struct _vector {
-	char *data;
-	int length;
-	int capacity;
-	int size;
-
-};
 
 #define vector_generate(type)							\
 										\
-	struct _vector_##type;							\
-										\
-	struct _vector_functions_##type {					\
-		int	(*push)(struct _vector_##type *, type);			\
-		type	(*pop)(struct _vector_##type *);			\
-		type	(*get)(struct _vector_##type *, int);			\
-		void	(*set)(struct _vector_##type *, int, type);		\
-		type*	(*getarr)(struct _vector_##type *);			\
-		void	(*free)(struct _vector_##type *);			\
-		int	(*length)(struct _vector_##type *);			\
-										\
-	};									\
-										\
-	struct _vector_##type {							\
+	struct vector_##type {							\
 		type *data;							\
-		int length;							\
-		int capacity;							\
-		int size;							\
-		struct _vector_functions_##type functions;			\
+		size_t nmemb;							\
+		size_t  maxnmemb;						\
+										\
+		const struct vector_functions_##type * const func;		\
 										\
 	};									\
-										\
 										\
 	int									\
-	_vector_push_##type(struct _vector_##type *a, type value)		\
+	vector_init_##type(struct vector_##type *v)				\
 	{									\
-		return _vector_push((struct _vector *)a, &value);		\
-	}									\
+		type *data;							\
+		assert(v);							\
 										\
-	type									\
-	_vector_pop_##type(struct _vector_##type *a)				\
-	{									\
-		return *(type *)_vector_pop((struct _vector *)a);		\
-	}									\
+		data = realloc(NULL, sizeof(type) * VECTOR_START_MAXNMEMB);	\
 										\
-	type									\
-	_vector_get_##type(struct _vector_##type *a, int idx)			\
-	{									\
-		return *(type *)_vector_get((struct _vector *)a, idx);		\
+		if (!data)							\
+			return VECTOR_MEM_ERR;					\
+										\
+		v->nmemb = 0;							\
+		v->maxnmemb = VECTOR_START_MAXNMEMB;				\
+		v->data = data;							\
+										\
+		return VECTOR_OK;						\
 	}									\
 										\
 	void									\
-	_vector_set_##type(struct _vector_##type *a, int idx,			\
-							type value)		\
+	vector_free_##type(struct vector_##type *v)				\
 	{									\
-		_vector_set((struct _vector *)a, idx, &value);			\
+		assert(v);							\
+										\
+		free(v->data);							\
+	}									\
+										\
+	size_t									\
+	vector_nmemb_##type(const struct vector_##type *v)			\
+	{									\
+		assert(v);							\
+										\
+		return v->nmemb;						\
 	}									\
 										\
 	type *									\
-	_vector_getarr_##type(struct _vector_##type *a)				\
+	vector_data_##type(const struct vector_##type *v)			\
 	{									\
-		assert(a != NULL);						\
-		assert(a->data != NULL);					\
+		assert(v);							\
+		assert(v->data);						\
 										\
-		return a->data;							\
+		return v->data;							\
 	}									\
 										\
 	void									\
-	_vector_free_##type(struct _vector_##type *a)				\
+	vector_set_##type(struct vector_##type *v, size_t idx, type val)	\
 	{									\
-		assert(a != NULL);						\
-		assert(a->data != NULL);					\
+		assert(v);							\
+		assert(v->data);						\
 										\
-		free(a->data);							\
+		assert(idx < v->nmemb);						\
+										\
+		v->data[idx] = val;						\
+	}									\
+										\
+	type									\
+	vector_get_##type(const struct vector_##type *v, size_t idx)		\
+	{									\
+		assert(v);							\
+		assert(v->data);						\
+										\
+		assert(idx < v->nmemb);						\
+										\
+		return v->data[idx];						\
 	}									\
 										\
 	int									\
-	_vector_length_##type(struct _vector_##type *a)				\
+	vector_push_##type(struct vector_##type *v, type val)			\
 	{									\
-		assert(a != NULL);						\
+		type *data;							\
 										\
-		return a->length;						\
-	}
+		assert(v);							\
+		assert(v->data);						\
+										\
+		if (v->nmemb == v->maxnmemb) {					\
+			data =							\
+			realloc(v->data, (size_t)((float)v->maxnmemb		\
+						 * sizeof(type) *		\
+						VECTOR_MAXNMEMB_GROWTH));	\
+										\
+			if (!data)						\
+				return VECTOR_MEM_ERR;				\
+										\
+			v->data = data;						\
+			v->maxnmemb = (size_t)((float)v->maxnmemb *		\
+					VECTOR_MAXNMEMB_GROWTH);		\
+		}								\
+										\
+		v->data[v->nmemb++] = val;					\
+										\
+		return VECTOR_OK;						\
+	}									\
+										\
+	type									\
+	vector_pop_##type(struct vector_##type *v)				\
+	{									\
+		assert(v);							\
+		assert(v->data);						\
+		assert(v->nmemb);						\
+										\
+		return v->data[--v->nmemb];					\
+	}									\
+										\
+	struct vector_functions_##type {					\
+		int (*push)(struct vector_##type *, type);			\
+		type (*pop)(struct vector_##type *);				\
+		type (*get)(const struct vector_##type *, size_t);		\
+		void (*set)(struct vector_##type *, size_t, type);		\
+		type *(*data)(const struct vector_##type *);			\
+		void (*free)(struct vector_##type *);				\
+		size_t (*nmemb)(const struct vector_##type *);			\
+										\
+	};									\
+										\
+	struct vector_functions_##type vec_func_##type = {			\
+		vector_push_##type,						\
+		vector_pop_##type,						\
+		vector_get_##type,						\
+		vector_set_##type,						\
+		vector_data_##type,						\
+		vector_free_##type,						\
+		vector_nmemb_##type						\
+	};
 
 
 #define vector_init(type, name)							\
 										\
-	struct _vector_##type name;						\
+	struct vector_##type name = { .func = &vec_func_##type } ;		\
 										\
-	name.functions.push = _vector_push_##type;				\
-	name.functions.pop = _vector_pop_##type;				\
-	name.functions.get = _vector_get_##type;				\
-	name.functions.set = _vector_set_##type;				\
-	name.functions.getarr = _vector_getarr_##type;				\
-	name.functions.free = _vector_free_##type;				\
-	name.functions.length = _vector_length_##type;				\
-										\
-	name.size = sizeof(type);						\
-										\
-	assert(_vector_init(&name) == 0)					\
+	assert(vector_init_##type(&name) == VECTOR_OK)
 
 
-#define vector_push(a, value)		(a.functions.push(&a, value))
-#define vector_pop(a)			(a.functions.pop(&a))
-#define vector_get(a, idx)		(a.functions.get(&a, idx))
-#define vector_set(a, idx, value)	(a.functions.set(&a, idx, value))
-#define vector_getarr(a)		(a.functions.getarr(&a))
-#define vector_free(a)			(a.functions.free(&a))
-#define vector_length(a)		(a.functions.length(&a))
-
-
-int	_vector_init(struct _vector *vec);
-int	_vector_push(struct _vector *vec, void *value);
-void*	_vector_pop(struct _vector *vec);
-void*	_vector_get(struct _vector *vec, int idx);
-void	_vector_set(struct _vector *vec, int idx, void *value);
+#define vector_pop(a)		a.func->pop(&a)
+#define vector_push(a, val)	a.func->push(&a, val)
+#define vector_get(a, idx)	a.func->get(&a, idx)
+#define vector_set(a, idx, val)	a.func->set(&a, idx, val)
+#define vector_data(a)		a.func->data(&a)
+#define vector_free(a)		a.func->free(&a)
+#define vector_nmemb(a)		a.func->nmemb(&a)
 
 
 #endif
