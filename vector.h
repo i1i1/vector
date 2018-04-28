@@ -6,8 +6,10 @@
 #define VECTOR_START_MAXNMEMB	8
 #define VECTOR_MAXNMEMB_GROWTH	1.4
 
-#define VECTOR_MEM_ERR	1
-#define VECTOR_OK	0
+enum {
+	VECTOR_OK = 0,
+	VECTOR_MEM_ERR = 1
+};
 
 
 typedef struct {
@@ -28,10 +30,13 @@ int vector_nmemb(const vector *v);
 void *vector_data(const vector *v);
 
 void vector_set(vector *v, size_t idx, const void *val);
-void *vector_get(const vector *v, size_t idx);
+const void *vector_get(const vector *v, size_t idx);
 
 int vector_push(vector *v, const void *val);
-void *vector_pop(vector *v);
+void vector_pop(vector *v);
+
+int vector_add(vector *v, size_t idx, const void *val);
+void vector_remove(vector *v, size_t idx);
 
 #endif
 

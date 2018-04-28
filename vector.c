@@ -77,16 +77,20 @@ vector_data(const vector *v)
 void
 vector_set(vector *v, size_t idx, const void *val)
 {
+	void *p;
+
 	assert(v);
 	assert(v->data);
 	assert(val);
 
 	assert(idx < v->nmemb);
 
-	memcpy((void *)((char *)v->data + idx * v->size), val, v->size);
+	p = (void *)((char *)v->data + idx * v->size);
+
+	memcpy(p, val, v->size);
 }
 
-void *
+const void *
 vector_get(const vector *v, size_t idx)
 {
 	assert(v);
@@ -97,43 +101,71 @@ vector_get(const vector *v, size_t idx)
 	return (void *)((const char *)v->data + idx * v->size);
 }
 
+/* Add element to vector so: v[idx] = val */
 int
-vector_push(vector *v, const void *val)
+vector_add(vector *v, size_t idx, const void *val)
 {
 	void *data;
+	size_t nmemb;
+	size_t i;
 
 	assert(v);
 	assert(v->data);
 	assert(val);
+	assert(idx <= v->nmemb);
 
 	if (v->nmemb == v->maxnmemb) {
-		data = v->realloc(v->data,
-				(size_t)((float)v->maxnmemb * v->size * VECTOR_MAXNMEMB_GROWTH));
+		nmemb = (size_t)(v->maxnmemb * VECTOR_MAXNMEMB_GROWTH);
+		data = v->realloc(v->data, nmemb * v->size);
 
 		if (!data)
 			return VECTOR_MEM_ERR;
 
 		v->data = data;
-		v->maxnmemb = (size_t)((float)v->maxnmemb * VECTOR_MAXNMEMB_GROWTH);
+		v->maxnmemb = nmemb;
 	}
 
 	v->nmemb++;
-	vector_set(v, v->nmemb - 1, val);
+
+	for (i = idx; i < v->nmemb - 1; i++)
+		/* v[i] = v[i + 1] */
+		vector_set(v, i + 1, vector_get(v, i));
+
+	vector_set(v, idx, val);
 
 	return VECTOR_OK;
 }
 
-void *
-vector_pop(vector *v)
+void
+vector_remove(vector *v, size_t idx)
 {
-	void *res;
+	size_t i;
 
 	assert(v);
 	assert(v->nmemb);
+	assert(idx < v->nmemb);
 
-	res = vector_get(v, v->nmemb - 1);
+	for (i = idx + 1; i < v->nmemb; i++)
+		/* v[i - 1] = v[i] */
+		vector_set(v, i - 1, vector_get(v, i));
+
 	v->nmemb--;
+}
 
-	return res;
+int
+vector_push(vector *v, const void *val)
+{
+	assert(v);
+
+	return vector_add(v, v->nmemb, val);
+}
+
+void
+vector_pop(vector *v)
+{
+	assert(v);
+	assert(v->nmemb);
+
+	vector_remove(v, v->nmemb - 1);
 }
 

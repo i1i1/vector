@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "vector.h"
+
+#include "vector.h" // vector_*
 
 int
 cmp(int *a, int *b) {
@@ -22,17 +23,22 @@ main()
 
 	for (i = 0; i < 100; i++) {
 		sum += *(int *)vector_get(&a, i);
-		printf("%02d:%02d\t", i, *(int*)vector_get(&a, i));
-
+		printf("%d:%d\t", i, *(int *)vector_get(&a, i));
 	}
 
 	printf("\n%d\n", sum);
+	vector_remove(&a, 55);
+
+	for (i = 0; i < 99; i++) {
+		sum += *(int *)vector_get(&a, i);
+		printf("%d:%d\t", i, *(int *)vector_get(&a, i));
+	}
 
 	int *b = vector_data(&a);
 
 	qsort(b, vector_nmemb(&a), sizeof(int), (void *)cmp);
 
-	for (i = 0; i < 100; i++)
+	for (i = 0; i < 99; i++)
 		printf("%d:%d\t", i, *(int *)vector_get(&a, i));
 
 	int arr[] = {33, 26, 65, -10, 3}, nmemb = 5;
