@@ -26,7 +26,7 @@ void vector_initdata(vector *v, void *arr, size_t nmeb, size_t size,
 int vector_init(vector *v, size_t size, void *(*real)(void *, size_t));
 void vector_free(vector *v);
 
-int vector_nmemb(const vector *v);
+size_t vector_nmemb(const vector *v);
 void *vector_data(const vector *v);
 
 void vector_set(vector *v, size_t idx, const void *val);

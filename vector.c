@@ -57,7 +57,7 @@ vector_initdata(vector *v, void *arr, size_t nmemb, size_t size,
 	v->realloc = real;
 }
 
-int
+size_t
 vector_nmemb(const vector *v)
 {
 	assert(v);
