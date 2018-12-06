@@ -1,40 +1,42 @@
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "vector.h"
 
 int
-cmp(int *a, int *b) {
+cmp(int *a, int *b)
+{
 	return *a - *b;
 }
-
-vector_generate(int);
 
 int
 main()
 {
-	vector_init(int, a);
+	int *a = NULL;
 	int i, sum = 0;
 
-	for (i = 99; i > -1; i--)
+	for (i = 99; i >= 0; i--) {
 		if (vector_push(a, i))
 			return 1;
-
-	for (i = 0; i < 100; i++) {
-		sum += vector_get(a, i);
-		printf("%02d:%02d\t", i, vector_get(a, i));
-
 	}
 
-	printf("\nsum = %d\n", sum);
+	for (i = 0; i < vector_nmemb(a); i++) {
+		sum += a[i];
+		printf("%d:%d\t", i, a[i]);
+	}
 
-	int *b = vector_data(a);
+	printf("\nsum is equal to %d. total %ld elements\n", sum, vector_nmemb(a));
 
-	qsort(b, vector_nmemb(a), sizeof(int), (void *)cmp);
+	qsort(a, vector_nmemb(a), sizeof(int), (void *)cmp);
 
-	for (i = 0; i < 100; i++)
-		printf("%d:%d\t", i, vector_get(a, i));
+	for (i = 0; i < vector_nmemb(a); i++)
+		printf("%d:%d\t", i, a[i]);
+
+	while (vector_nmemb(a))
+		printf("%d\t", vector_pop(a));
 
 	printf("\n");
+	vector_free(a);
 
 	return 0;
 }
