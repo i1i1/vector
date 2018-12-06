@@ -21,7 +21,7 @@
 								(_vector_hardpush(a, val), 0) : \
 									(_vector_grow((void *)&(a), sizeof(*(a))) ? 1 : \
 										(_vector_hardpush(a, val), 0)))
-#define vector_pop(a)		(assert(vector_nmemb(a)), (a)[_vector_nmemb(a)--])
+#define vector_pop(a)		(assert(vector_nmemb(a)), (a)[--_vector_nmemb(a)])
 #define vector_free(a)		((a) ? VECTOR_FREE(_vector_raw(a)) : 0)
 
 #define _vector_hardpush(a, val) ((a)[_vector_nmemb(a)++] = val)

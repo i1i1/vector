@@ -32,6 +32,8 @@ main()
 	for (i = 0; i < vector_nmemb(a); i++)
 		printf("%d:%d\t", i, a[i]);
 
+	printf("\n");
+
 	while (vector_nmemb(a))
 		printf("%d\t", vector_pop(a));
 
@@ -40,3 +42,4 @@ main()
 
 	return 0;
 }
+
