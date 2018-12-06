@@ -11,7 +11,7 @@
 #define VECTOR_FREE(ptr)			VECTOR_REALLOC(ptr, 0)
 #define VECTOR_MALLOC(size)			VECTOR_REALLOC(NULL, size)
 
-#define vector_nmemb(a)		((const size_t)_vector_raw(a)[0])
+#define vector_nmemb(a)		((a) ? (size_t)_vector_raw(a)[0] : 0)
 
 #define _vector_raw(a)		((size_t *)(a) - 2)
 #define _vector_nmemb(a)	(_vector_raw(a)[0])
