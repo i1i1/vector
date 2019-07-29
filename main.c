@@ -13,33 +13,33 @@ cmp(int *a, int *b)
 int
 main()
 {
-	int *a = NULL;
+	vector_decl(int, a);
 	int i, sum = 0;
 
 	for (i = 99; i >= 0; i--) {
-		if (vector_push(a, i))
+		if (vector_push(&a, i))
 			return 1;
 	}
 
-	for (i = 0; i < vector_nmemb(a); i++) {
+	for (i = 0; i < (int)vector_nmemb(&a); i++) {
 		sum += a[i];
 		printf("%d:%d\t", i, a[i]);
 	}
 
-	printf("\nsum is equal to %d. total %ld elements\n", sum, vector_nmemb(a));
+	printf("\nsum is equal to %d. total %ld elements\n", sum, vector_nmemb(&a));
 
-	qsort(a, vector_nmemb(a), sizeof(int), (void *)cmp);
+	qsort(a, vector_nmemb(&a), sizeof(int), (void *)cmp);
 
-	for (i = 0; i < vector_nmemb(a); i++)
+	for (i = 0; i < (int)vector_nmemb(&a); i++)
 		printf("%d:%d\t", i, a[i]);
 
 	printf("\n");
 
-	while (vector_nmemb(a))
-		printf("%d\t", vector_pop(a));
+	while (vector_nmemb(&a))
+		printf("%d\t", vector_pop(&a));
 
 	printf("\n");
-	vector_free(a);
+	vector_free(&a);
 
 	return 0;
 }
